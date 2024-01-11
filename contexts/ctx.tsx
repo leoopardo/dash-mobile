@@ -1,9 +1,14 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useStorageState } from "./useStorageState";
 import { useToken } from "../services/auth/useGetToken";
+import { useValidate } from "../services/auth/useValidateToken";
+import { useStorageState } from "./useStorageState";
+import { ValidateInterface } from "../services/auth/types/validate.interface";
+import { queryClient } from "../services/queryClient";
 
 const AuthContext = React.createContext<{
   signIn: () => void;
+  signByStorage: () => void;
   signOut: () => void;
   setCredentials: Dispatch<
     SetStateAction<{ username: string; password: string }>
@@ -12,14 +17,17 @@ const AuthContext = React.createContext<{
   isLoading: boolean;
   success?: boolean;
   error?: any;
+  user?: ValidateInterface;
 }>({
   signIn: () => null,
   signOut: () => null,
   setCredentials: () => null,
+  signByStorage: () => null,
   session: null,
   isLoading: false,
   success: false,
   error: null,
+  user: undefined,
 });
 
 // This hook can be used to access the user info.
@@ -40,16 +48,24 @@ export function SessionProvider(props: React.PropsWithChildren) {
     username: string;
     password: string;
   }>({ username: "", password: "" });
-  const { Login, data, error, isValidateSuccess, isLoading } = useToken({
+  const [asyncStorage, setAsyncStorage] = useState<string>("");
+  const { Login, data, error, isLoading } = useToken({
     username: credentials.username,
     password: credentials.password,
   });
 
+  const {
+    refetchValidate,
+    isValidateSuccess,
+    isValidateFetching,
+    responseValidate,
+    remove,
+    validateError,
+  } = useValidate(session || data?.token);
+
   useEffect(() => {
     setSession(data.token);
   }, [data]);
-
-  console.log(credentials);
 
   return (
     <AuthContext.Provider
@@ -60,11 +76,21 @@ export function SessionProvider(props: React.PropsWithChildren) {
         setCredentials,
         signOut: () => {
           setSession(null);
+          AsyncStorage.removeItem("token");
+          remove();
+        },
+        signByStorage: async () => {
+          const tokenStorage = await AsyncStorage.getItem("token");
+          setSession(tokenStorage || session); // Update asyncStorage state
+          if (!validateError) {
+            refetchValidate();
+          }
         },
         session,
-        isLoading,
+        isLoading: isLoading || isValidateFetching || _load,
         success: isValidateSuccess,
         error,
+        user: responseValidate ?? undefined,
       }}
     >
       {props.children}

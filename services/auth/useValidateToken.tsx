@@ -10,7 +10,7 @@ import Toast from "react-native-toast-message";
 let disabledNotification = false;
 
 export function useValidate(token?: string) {
-  const { data, isFetching, error, refetch, isSuccess } = useQuery<
+  const { data, isFetching, error, refetch, isSuccess, remove } = useQuery<
     ValidateInterface | null | undefined
   >(
     "validate",
@@ -30,7 +30,7 @@ export function useValidate(token?: string) {
       }
     },
     {
-      refetchOnWindowFocus: "always",
+      enabled: false
     }
   );
   useEffect(() => {
@@ -71,5 +71,6 @@ export function useValidate(token?: string) {
     validateError,
     refetchValidate,
     isValidateSuccess,
+    remove
   };
 }

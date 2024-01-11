@@ -32,8 +32,8 @@ export function useToken(user: { username: string; password: string }) {
           headers: { Authorization: "" },
         }
       );
-      AsyncStorage.removeItem("token");
-      AsyncStorage.setItem("token", response.data.token);
+      await AsyncStorage.removeItem("token");
+      await AsyncStorage.setItem("token", response.data.token);
       setData(response.data);
     } catch (error: any) {
       setError(error);
@@ -44,7 +44,10 @@ export function useToken(user: { username: string; password: string }) {
   }
 
   useEffect(() => {
-    refetchValidate();
+    if (data.token) {
+      setIsSuccess(true);
+      refetchValidate();
+    }
   }, [data]);
 
   const LoginError: any = error;

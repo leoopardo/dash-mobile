@@ -1,19 +1,19 @@
 import * as eva from "@eva-design/eva";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
-import { ApplicationProvider } from "@ui-kitten/components";
+import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
+import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { useFonts } from "expo-font";
-import { Slot, SplashScreen, Stack } from "expo-router";
+import { Redirect, Slot, SplashScreen } from "expo-router";
 import { useEffect } from "react";
-import Toast from "react-native-toast-message";
 import { QueryClientProvider } from "react-query";
-import ThemeColors from "../constants/theme";
-import { queryClient } from "../services/queryClient";
+import Colors from "../constants/Colors";
 import { SessionProvider } from "../contexts/ctx";
+import { queryClient } from "../services/queryClient";
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+  ErrorBoundary
 } from "expo-router";
 
 export const unstable_settings = {
@@ -54,9 +54,11 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <ThemeProvider value={DefaultTheme}>
-      <ApplicationProvider {...eva} theme={{ ...eva.light, ...ThemeColors }}>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider {...eva} theme={{ ...eva.light, ...Colors.light }}>
         <QueryClientProvider client={queryClient}>
           <SessionProvider>
+            <Redirect href={"/dashboard"} />
             <Slot />
           </SessionProvider>
         </QueryClientProvider>

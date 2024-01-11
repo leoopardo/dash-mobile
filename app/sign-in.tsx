@@ -4,7 +4,13 @@ import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { Image, Platform, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Keyboard,
+  Platform,
+  StyleSheet,
+} from "react-native";
 import { View } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { useSession } from "../contexts/ctx";
@@ -17,6 +23,12 @@ export default function LoginLayout() {
   const toggleSecureEntry = (): void => {
     setSecureTextEntry(!secureTextEntry);
   };
+
+  useEffect(() => {
+    if (success) {
+      setTimeout(() => router.push("/dashboard"), 600);
+    }
+  }, [success]);
 
   const renderIcon = (props: any): React.ReactElement => (
     <TouchableWithoutFeedback onPress={toggleSecureEntry}>
@@ -35,11 +47,34 @@ export default function LoginLayout() {
     );
   };
 
+  const [keyboardSpace, setKeyboardSpace] = useState(0);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      (event) => {
+        setKeyboardSpace(event.endCoordinates.height);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardSpace(0);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { marginBottom: keyboardSpace + 50 }]}>
       <LinearGradient
         // Background Linear Gradient
-        colors={[Colors.light.secondary, Colors.light.primary]}
+        colors={[Colors.light.secondary, Colors.light["color-primary-500"]]}
         style={styles.gradient}
       >
         <Image
@@ -48,7 +83,11 @@ export default function LoginLayout() {
         />
       </LinearGradient>
       <View style={styles.roundShapeLock}>
-        <IconOutline name="lock" size={36} style={styles.lock} />
+        <IconOutline
+          name={success ? "unlock" : "lock"}
+          size={36}
+          style={styles.lock}
+        />
       </View>
 
       <Text style={styles.title}>Faça login</Text>
@@ -81,10 +120,18 @@ export default function LoginLayout() {
         size="large"
         style={styles.loginButton}
         onPress={() => {
-          signIn(), router.push("/");
+          signIn();
         }}
+        disabled={isLoading}
       >
-        {isLoading ? <Spinner /> : "Entrar"}
+        {isLoading ? (
+          <ActivityIndicator
+            size="small"
+            color={Colors.light["color-primary-500"]}
+          />
+        ) : (
+          "Entrar"
+        )}
       </Button>
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
     </View>
@@ -108,7 +155,7 @@ const styles = StyleSheet.create({
   roundShapeLock: {
     height: 60,
     width: 60,
-    backgroundColor: Colors.light.primary,
+    backgroundColor: Colors.light["color-primary-500"],
     borderRadius: 50,
     display: "flex",
     justifyContent: "center",
@@ -147,6 +194,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "400",
     fontFamily: "opensans-regular",
-    color: Colors.light.error,
+    color: Colors.light["color-danger-900"],
   },
 });
