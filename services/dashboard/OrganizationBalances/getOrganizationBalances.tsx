@@ -1,17 +1,21 @@
 import { useQuery } from "react-query";
 import { OrganizationBalance } from "./types/organizationBalances.interface";
 import { api } from "../../api";
+import { useSession } from "../../../contexts/ctx";
 
 export function useGetOrganizationBalance() {
+  const { session } = useSession();
   const { data, isFetching, error, refetch } = useQuery<
     OrganizationBalance | null | undefined
   >("OrganizationBalance", async () => {
     try {
-      const response = await api.get("core/organization/account/", {});
+      const response = await api.get("core/organization/account/", {
+        Headers: { Authorizatioin: `Bearer ${session}` },
+      });
 
       return response.data;
     } catch (error: any) {
-     console.error(error)
+      console.error(error);
     }
   });
 

@@ -71,7 +71,12 @@ export default function LoginLayout() {
   }, []);
 
   return (
-    <View style={[styles.container, { marginBottom: keyboardSpace + 50 }]}>
+    <View
+      style={[
+        styles.container,
+        { marginBottom: Platform.OS === "ios" ? keyboardSpace + 50 : 10 },
+      ]}
+    >
       <LinearGradient
         // Background Linear Gradient
         colors={[Colors.light.secondary, Colors.light["color-primary-500"]]}

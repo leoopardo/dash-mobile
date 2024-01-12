@@ -1,15 +1,14 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { useGetOrganizationBalance } from "../../services/dashboard/OrganizationBalances/getOrganizationBalances";
 import { Card, Layout } from "@ui-kitten/components";
+import { ActivityIndicator, StyleSheet, Text } from "react-native";
 import Colors from "../../constants/Colors";
+import { useGetMerchantBalanceTotal } from "../../services/dashboard/MerchantBalance/getMerchantBalance";
 
-export default function OrganizationBalanceStats() {
-  const { OrganizationBalance, isOrganizationBalanceFetching } =
-    useGetOrganizationBalance();
+export default function MerchantBalanceStats() {
+  const {MerchantBalance, isMerchantBalanceFetching} = useGetMerchantBalanceTotal({limit: 25, page: 1})
 
   return (
     <Layout style={styles.container}>
-      {isOrganizationBalanceFetching ? (
+      {isMerchantBalanceFetching ? (
         <ActivityIndicator
           size="small"
           color={Colors.light["color-primary-500"]}
@@ -23,7 +22,7 @@ export default function OrganizationBalanceStats() {
               {new Intl.NumberFormat("pt-BR", {
                 style: "currency",
                 currency: "BRL",
-              }).format(OrganizationBalance.balance_to_transactions || 0)}
+              }).format(MerchantBalance.balance_to_transactions || 0)}
             </Text>
           </Card>
 
@@ -33,7 +32,7 @@ export default function OrganizationBalanceStats() {
               {new Intl.NumberFormat("pt-BR", {
                 style: "currency",
                 currency: "BRL",
-              }).format(OrganizationBalance.balance_to_payment || 0)}
+              }).format(MerchantBalance.balance_to_payment || 0)}
             </Text>
           </Card>
 
@@ -43,7 +42,7 @@ export default function OrganizationBalanceStats() {
               {new Intl.NumberFormat("pt-BR", {
                 style: "currency",
                 currency: "BRL",
-              }).format(OrganizationBalance.balance_reserved || 0)}
+              }).format(MerchantBalance.balance_reserved || 0)}
             </Text>
           </Card>
 
@@ -53,7 +52,7 @@ export default function OrganizationBalanceStats() {
               {new Intl.NumberFormat("pt-BR", {
                 style: "currency",
                 currency: "BRL",
-              }).format(OrganizationBalance.balance_total || 0)}
+              }).format(MerchantBalance.balance_total || 0)}
             </Text>
           </Card>
         </>

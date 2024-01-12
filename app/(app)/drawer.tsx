@@ -5,19 +5,26 @@ import {
   MenuGroup,
   MenuItem,
 } from "@ui-kitten/components";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Icon } from "react-native-elements";
 
 export default function Drawer() {
   const [selectedIndex, setSelectedIndex] = useState<any>(null);
+  const navigation = useNavigation();
 
   return (
     <DrawerModal
       selectedIndex={selectedIndex}
       onSelect={(index) => setSelectedIndex(index)}
     >
+      <DrawerItem
+        accessoryLeft={<Icon name="dashboard" size={20} />}
+        style={styles.divider}
+        title="Dashboard"
+        onPress={() => router.replace("/(app)/dashboard")}
+      />
       <DrawerGroup
         title="Cadastros"
         accessoryLeft={<Icon name="add" size={20} />}
@@ -58,21 +65,41 @@ export default function Drawer() {
         }}
         style={styles.menu}
       >
-        <MenuItem style={styles.divider} title="Organização" />
+        <MenuItem
+          style={styles.divider}
+          title="Organização"
+          onPress={() => router.replace("/(app)/(consult_organization)/")}
+        />
 
-        <MenuItem style={styles.divider} title="Empresas" />
+        <MenuItem
+          style={styles.divider}
+          title="Empresas"
+          onPress={() => router.replace("/(app)/(consult_merchant)/")}
+        />
 
         <MenuItem
           style={styles.divider}
           title="Depósitos"
-          onPress={() => router.push("/(consult_deposits)/")}
+          onPress={() => router.replace("/(app)/(consult_deposits)/")}
         />
 
-        <MenuItem style={styles.divider} title="Saques" />
+        <MenuItem
+          style={styles.divider}
+          title="Saques"
+          onPress={() => router.replace("/(app)/(consult_withdrawals)/")}
+        />
 
-        <MenuItem style={styles.divider} title="Devoluções" />
+        <MenuItem
+          style={styles.divider}
+          title="Devoluções"
+          onPress={() => router.replace("/(app)/(consult_refunds)/")}
+        />
 
-        <MenuItem style={styles.divider} title="Pessoas" />
+        <MenuItem
+          style={styles.divider}
+          title="Pessoas"
+          onPress={() => router.replace("/(app)/(consult_persons)/")}
+        />
       </MenuGroup>
       <MenuGroup
         style={styles.menu}

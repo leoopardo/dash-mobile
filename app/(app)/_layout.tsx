@@ -6,7 +6,7 @@ import {
   TopNavigationAction,
 } from "@ui-kitten/components";
 import { LinearGradient } from "expo-linear-gradient";
-import { Redirect, Stack, router } from "expo-router";
+import { Redirect, Stack, router, useNavigation } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Image, StyleSheet } from "react-native";
 import { Avatar, Icon } from "react-native-elements";
@@ -20,6 +20,7 @@ export default function AppLayout() {
   const [menuVisible, setMenuVisible] = useState(false);
   const { validateError } = useValidate(session || "");
   const header = useHeader();
+  const navigation = useNavigation();
 
   if (!user && session) {
     signByStorage();
@@ -80,31 +81,33 @@ export default function AppLayout() {
   );
 
   return (
-    <Stack screenOptions={{
-      headerBackground: () => <GradientHeader />,
-      headerTintColor: "#fff",
-      headerTitleAlign: "center",
-      navigationBarColor: "#ffffff0",
-      headerLeft: () => (
-        <Button appearance="ghost" onPress={() => router.push("/drawer")}>
-          <Icon name="menu" color={"#fff"} />
-        </Button>
-      ),
-      headerRight: () => (
-        <OverflowMenu
-          anchor={renderMenuAction}
-          visible={menuVisible}
-          onBackdropPress={toggleMenu}
-        >
-          <MenuItem accessoryLeft={InfoIcon} title="Perfil" />
-          <MenuItem
-            accessoryLeft={LogoutIcon}
-            title="Sair"
-            onPressOut={() => signOut()}
-          />
-        </OverflowMenu>
-      ),
-    }}>
+    <Stack
+      screenOptions={{
+        headerBackground: () => <GradientHeader />,
+        headerTintColor: "#fff",
+        headerTitleAlign: "center",
+        navigationBarColor: "#ffffff0",
+        headerLeft: () => (
+          <Button appearance="ghost" onPress={() => router.push("/drawer")}>
+            <Icon name="menu" color={"#fff"} />
+          </Button>
+        ),
+        headerRight: () => (
+          <OverflowMenu
+            anchor={renderMenuAction}
+            visible={menuVisible}
+            onBackdropPress={toggleMenu}
+          >
+            <MenuItem accessoryLeft={InfoIcon} title="Perfil" />
+            <MenuItem
+              accessoryLeft={LogoutIcon}
+              title="Sair"
+              onPressOut={() => signOut()}
+            />
+          </OverflowMenu>
+        ),
+      }}
+    >
       <Stack.Screen
         name="dashboard"
         options={{
@@ -148,13 +151,47 @@ export default function AppLayout() {
         }}
       />
       <Stack.Screen
+        name="(consult_organization)"
+        options={{
+          title: "Organização",
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="(consult_merchant)"
+        options={{
+          title: "Empresa",
+          headerShown: true,
+        }}
+      />{" "}
+      <Stack.Screen
         name="(consult_deposits)"
         options={{
           title: "Depósitos",
           headerShown: true,
         }}
       />
-     
+      <Stack.Screen
+        name="(consult_withdrawals)"
+        options={{
+          title: "Saques",
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="(consult_refunds)"
+        options={{
+          title: "Devoluções",
+          headerShown: true,
+        }}
+      />
+         <Stack.Screen
+        name="(consult_persons)"
+        options={{
+          title: "Pessoas",
+          headerShown: true,
+        }}
+      />
     </Stack>
   );
 }
