@@ -10,6 +10,7 @@ const AuthContext = React.createContext<{
   signIn: () => void;
   signByStorage: () => void;
   signOut: () => void;
+  setSession: (value: string | null) => void;
   setCredentials: Dispatch<
     SetStateAction<{ username: string; password: string }>
   >;
@@ -21,6 +22,7 @@ const AuthContext = React.createContext<{
 }>({
   signIn: () => null,
   signOut: () => null,
+  setSession: () => null,
   setCredentials: () => null,
   signByStorage: () => null,
   session: null,
@@ -86,6 +88,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
             refetchValidate();
           }
         },
+        setSession,
         session,
         isLoading: isLoading || isValidateFetching || _load,
         success: isValidateSuccess,

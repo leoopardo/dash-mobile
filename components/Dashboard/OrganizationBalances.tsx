@@ -66,7 +66,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     flexWrap: "wrap",
-    padding: 8
+    padding: 8,
+    width: "100%",
+    height: 180,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   card: {
     margin: 2,

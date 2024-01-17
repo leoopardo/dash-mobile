@@ -1,0 +1,8 @@
+{
+    "chips": {
+        "status": "Situação",
+        "date": "Data",
+        "true": "Ativo",
+        "false": "Inativo"
+    }
+}

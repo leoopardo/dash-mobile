@@ -21,7 +21,6 @@ export function useValidate(token?: string) {
             Authorization: `Bearer ${token ?? AsyncStorage.getItem("token")}`,
           },
         });
-        console.log(response.data);
         return response.data;
        
         

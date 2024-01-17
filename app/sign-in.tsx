@@ -3,7 +3,7 @@ import { Button, Input, Spinner, Text } from "@ui-kitten/components";
 import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -19,7 +19,7 @@ import { router } from "expo-router";
 export default function LoginLayout() {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const { signIn, setCredentials, isLoading, error, success } = useSession();
-
+  const passwordInputRef = useRef<any>(null);
   const toggleSecureEntry = (): void => {
     setSecureTextEntry(!secureTextEntry);
   };
@@ -106,9 +106,11 @@ export default function LoginLayout() {
           setCredentials((state) => ({ ...state, username: nextValue }));
         }}
         status={error ? "danger" : "basic"}
+        onSubmitEditing={() => (passwordInputRef?.current as any)?.focus()}
       />
 
       <Input
+        ref={passwordInputRef}
         style={styles.input}
         label="Password"
         placeholder="**********"
@@ -119,6 +121,9 @@ export default function LoginLayout() {
         }}
         status={error ? "danger" : "basic"}
         caption={error && renderCaption}
+        onSubmitEditing={() => {
+          signIn();
+        }}
       />
 
       <Button

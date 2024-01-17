@@ -28,9 +28,6 @@ export default function Drawer() {
       <DrawerGroup
         title="Cadastros"
         accessoryLeft={<Icon name="add" size={20} />}
-        onPress={(desciptor) => {
-          console.log(desciptor);
-        }}
         style={styles.menu}
       >
         <DrawerItem style={styles.divider} title="Organização" />
@@ -48,9 +45,7 @@ export default function Drawer() {
       <MenuGroup
         title="Movimentações"
         accessoryLeft={<Icon name="send" size={20} />}
-        onPress={(desciptor) => {
-          console.log(desciptor);
-        }}
+    
         style={styles.menu}
       >
         <MenuItem style={styles.divider} title="Lançamentos manuais" />
@@ -60,9 +55,7 @@ export default function Drawer() {
       <MenuGroup
         title="Consultas"
         accessoryLeft={<Icon name="search" size={20} />}
-        onPress={(desciptor) => {
-          console.log(desciptor);
-        }}
+    
         style={styles.menu}
       >
         <MenuItem
@@ -105,9 +98,7 @@ export default function Drawer() {
         style={styles.menu}
         title="Suporte"
         accessoryLeft={<Icon name="info" size={20} />}
-        onPress={(desciptor) => {
-          console.log(desciptor);
-        }}
+    
       >
         <MenuItem style={styles.divider} title="UI Kitten" />
 

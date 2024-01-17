@@ -6,15 +6,17 @@ import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { useFonts } from "expo-font";
 import { Redirect, Slot, SplashScreen } from "expo-router";
 import { useEffect } from "react";
+import { LogBox } from "react-native";
 import { QueryClientProvider } from "react-query";
 import Colors from "../constants/Colors";
 import { SessionProvider } from "../contexts/ctx";
+import { FiltersProvider } from "../contexts/filtersContext";
+import "../i18n.config";
 import { queryClient } from "../services/queryClient";
-import { LogBox } from "react-native";
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+  ErrorBoundary
 } from "expo-router";
 
 export const unstable_settings = {
@@ -57,15 +59,18 @@ LogBox.ignoreAllLogs();
 function RootLayoutNav() {
   return (
     <ThemeProvider value={DefaultTheme}>
-      <IconRegistry icons={EvaIconsPack} />
-      <ApplicationProvider {...eva} theme={{ ...eva.light, ...Colors.light }}>
-        <QueryClientProvider client={queryClient}>
-          <SessionProvider>
-            <Redirect href={"/dashboard"} />
-            <Slot />
-          </SessionProvider>
-        </QueryClientProvider>
-      </ApplicationProvider>
+      
+        <IconRegistry icons={EvaIconsPack} />
+        <ApplicationProvider {...eva} theme={{ ...eva.light, ...Colors.light }}>
+          <QueryClientProvider client={queryClient}>
+            <SessionProvider>
+              <FiltersProvider>
+                <Redirect href={"/dashboard"} />
+                <Slot />
+              </FiltersProvider>
+            </SessionProvider>
+          </QueryClientProvider>
+        </ApplicationProvider>
     </ThemeProvider>
   );
 }

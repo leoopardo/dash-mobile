@@ -6,21 +6,21 @@ import {
   TopNavigationAction,
 } from "@ui-kitten/components";
 import { LinearGradient } from "expo-linear-gradient";
-import { Redirect, Stack, router, useNavigation } from "expo-router";
+import { Redirect, Stack, router } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, Image, StyleSheet } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 import { Avatar, Icon } from "react-native-elements";
 import Colors from "../../constants/Colors";
 import { useSession } from "../../contexts/ctx";
+import { useFilter } from "../../contexts/filtersContext";
 import { useValidate } from "../../services/auth/useValidateToken";
-import useHeader from "../../components/header";
+import { Icon as EvaIcon } from "react-native-eva-icons";
 
 export default function AppLayout() {
-  const { session, isLoading, user, signOut, signByStorage } = useSession();
+  const { session, isLoading, user, signOut, signByStorage, setSession } = useSession();
   const [menuVisible, setMenuVisible] = useState(false);
   const { validateError } = useValidate(session || "");
-  const header = useHeader();
-  const navigation = useNavigation();
+  const { setOpen } = useFilter();
 
   if (!user && session) {
     signByStorage();
@@ -29,6 +29,7 @@ export default function AppLayout() {
     return <Redirect href="/sign-in" />;
   }
   if (validateError) {
+    setSession(null)
     signOut();
     return <Redirect href="/sign-in" />;
   }
@@ -112,6 +113,43 @@ export default function AppLayout() {
         name="dashboard"
         options={{
           title: "Dashboard",
+          headerRight: (props) => {
+            return (
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  appearance="ghost"
+                  style={{ width: 36, height: 36 }}
+                  onPress={() => setOpen(true)}
+                >
+                  <EvaIcon
+                    name="funnel-outline"
+                    width={32}
+                    height={32}
+                    fill="#ffffffc5"
+                  />
+                </Button>
+                <OverflowMenu
+                  anchor={renderMenuAction}
+                  visible={menuVisible}
+                  onBackdropPress={toggleMenu}
+                >
+                  <MenuItem accessoryLeft={InfoIcon} title="Perfil" />
+                  <MenuItem
+                    accessoryLeft={LogoutIcon}
+                    title="Sair"
+                    onPressOut={() => signOut()}
+                  />
+                </OverflowMenu>
+              </View>
+            );
+          },
         }}
       />
       <Stack.Screen
@@ -185,7 +223,7 @@ export default function AppLayout() {
           headerShown: true,
         }}
       />
-         <Stack.Screen
+      <Stack.Screen
         name="(consult_persons)"
         options={{
           title: "Pessoas",
