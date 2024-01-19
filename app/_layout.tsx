@@ -13,10 +13,11 @@ import { SessionProvider } from "../contexts/ctx";
 import { FiltersProvider } from "../contexts/filtersContext";
 import "../i18n.config";
 import { queryClient } from "../services/queryClient";
+import { RedirectAuth } from "./redirect";
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary
+  ErrorBoundary,
 } from "expo-router";
 
 export const unstable_settings = {
@@ -59,18 +60,17 @@ LogBox.ignoreAllLogs();
 function RootLayoutNav() {
   return (
     <ThemeProvider value={DefaultTheme}>
-      
-        <IconRegistry icons={EvaIconsPack} />
-        <ApplicationProvider {...eva} theme={{ ...eva.light, ...Colors.light }}>
-          <QueryClientProvider client={queryClient}>
-            <SessionProvider>
-              <FiltersProvider>
-                <Redirect href={"/dashboard"} />
-                <Slot />
-              </FiltersProvider>
-            </SessionProvider>
-          </QueryClientProvider>
-        </ApplicationProvider>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider {...eva} theme={{ ...eva.light, ...Colors.light }}>
+        <QueryClientProvider client={queryClient}>
+          <SessionProvider>
+            <FiltersProvider>
+              <RedirectAuth />
+       
+            </FiltersProvider>
+          </SessionProvider>
+        </QueryClientProvider>
+      </ApplicationProvider>
     </ThemeProvider>
   );
 }

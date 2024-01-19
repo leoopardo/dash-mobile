@@ -3,6 +3,7 @@ import { Chip } from "@rneui/themed";
 import { View } from "react-native";
 import Colors from "../../constants/Colors";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
 
 interface FilterChipsProps {
   query: any;
@@ -19,40 +20,43 @@ export function FilterChips({
   startDateKeyName,
   endDateKeyName,
 }: FilterChipsProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  console.log(query);
-  
   return (
     <View
       style={{
-        width: 500,
+        width: "100%",
+        flexDirection: "row",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         flexWrap: "wrap",
-        paddingBottom: 8,
-        paddingTop: 8,
       }}
     >
       {Object.keys(query).map((key) => {
         switch (key) {
           case startDateKeyName:
             return (
+              <View>
               <Chip
-                title={`${t("chips.date")}: ${new Date(
-                  query[key]
-                ).toLocaleDateString()} ${new Date(
-                  query[key]
-                ).toLocaleTimeString()} -  ${new Date(
-                  query[endDateKeyName]
-                ).toLocaleDateString()} ${new Date(
-                  query[endDateKeyName]
-                ).toLocaleTimeString()}`}
+              size="sm"
+                title={`${t("chips.date")}: ${moment(query[key])
+                  .subtract(3, "hours")
+                  .format(
+                    i18n.language === "pt-BR"
+                      ? "DD/MM/YYYY HH:mm"
+                      : "YYYY/MM/DD HH:mm"
+                  )} - ${moment(query[endDateKeyName])
+                  .subtract(3, "hours")
+                  .format(
+                    i18n.language === "pt-BR"
+                      ? "DD/MM/YYYY HH:mm"
+                      : "YYYY/MM/DD HH:mm"
+                  )} `}
                 icon={{
                   name: "close",
                   type: "font-awesome",
-                  size: 20,
+                  size: 16,
                   color: Colors.light["color-primary-100"],
                 }}
                 onPress={() => {
@@ -64,25 +68,28 @@ export function FilterChips({
                 iconRight
                 type="solid"
                 containerStyle={{
-                  marginVertical: 8,
-                  marginHorizontal: 8,
+                  marginTop: 8,
+                  marginRight: 8,
                 }}
-                titleStyle={{ color: Colors.light["color-primary-100"] }}
+                titleStyle={{ color: Colors.light["color-primary-100"], fontSize: 12 }}
                 color={Colors.light["color-primary-500"]}
               />
+              </View>
             );
           case endDateKeyName:
             return;
 
           default:
             return (
+              <View>
               <Chip
+              size="sm"
                 title={`${t(`chips.${key}`)}: ${t(`chips.${query[key]}`)}`}
                 icon={{
                   name: "close",
                   type: "font-awesome",
-                  size: 20,
-                  color: Colors.light["color-primary-200"],
+                  size: 16,
+                  color: Colors.light["color-primary-100"],
                 }}
                 onPress={() => {
                   const newQuery = { ...query };
@@ -92,11 +99,13 @@ export function FilterChips({
                 iconRight
                 type="solid"
                 containerStyle={{
-                  marginHorizontal: 8,
+                  marginTop: 8,
+                  marginRight: 8,
                 }}
-                titleStyle={{ color: Colors.light["color-primary-100"] }}
+                titleStyle={{ color: Colors.light["color-primary-100"], fontSize: 12 }}
                 color={Colors.light["color-primary-500"]}
               />
+              </View>
             );
         }
       })}

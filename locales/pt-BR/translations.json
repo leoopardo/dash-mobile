@@ -1,8 +1,17 @@
 {
-    "chips": {
-        "status": "Situação",
-        "date": "Data",
-        "true": "Ativo",
-        "false": "Inativo"
-    }
+  "chips": {
+    "status": "Situação",
+    "date": "Data",
+    "true": "Ativo",
+    "false": "Inativo",
+    "teste": "Teste",
+    "merchant_id": "ID empresa"
+  },
+  "card": {
+    "awaiting_refund_total": "Aguardando devolução",
+    "canceled_total": "Cancelado",
+    "paid_total": "Pago",
+    "refund_total": "Devolvido",
+    "expired_total": "Expirado"
+  }
 }

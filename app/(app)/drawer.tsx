@@ -25,7 +25,7 @@ export default function Drawer() {
         title="Dashboard"
         onPress={() => router.replace("/(app)/dashboard")}
       />
-      <DrawerGroup
+      {/* <DrawerGroup
         title="Cadastros"
         accessoryLeft={<Icon name="add" size={20} />}
         style={styles.menu}
@@ -41,7 +41,7 @@ export default function Drawer() {
         <DrawerItem style={styles.divider} title="Empresas" />
 
         <DrawerItem style={styles.divider} title="Pessoas" />
-      </DrawerGroup>
+      </DrawerGroup> */}
       <MenuGroup
         title="Movimentações"
         accessoryLeft={<Icon name="send" size={20} />}
@@ -94,7 +94,7 @@ export default function Drawer() {
           onPress={() => router.replace("/(app)/(consult_persons)/")}
         />
       </MenuGroup>
-      <MenuGroup
+      {/* <MenuGroup
         style={styles.menu}
         title="Suporte"
         accessoryLeft={<Icon name="info" size={20} />}
@@ -103,7 +103,7 @@ export default function Drawer() {
         <MenuItem style={styles.divider} title="UI Kitten" />
 
         <MenuItem style={styles.divider} title="Kitten Tricks" />
-      </MenuGroup>
+      </MenuGroup> */}
     </DrawerModal>
   );
 }

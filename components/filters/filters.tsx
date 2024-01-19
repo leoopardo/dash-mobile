@@ -65,8 +65,8 @@ export default function Filters({
     });
     if (query[startDateKeyName] && query[endDateKeyName]) {
       setRange({
-        endDate: query[endDateKeyName],
-        startDate: query[startDateKeyName],
+        endDate: new Date(query[endDateKeyName]),
+        startDate: new Date(query[startDateKeyName]),
       });
     } else {
       setRange({});
@@ -96,18 +96,21 @@ export default function Filters({
   // };
 
   useEffect(() => {
-  
     if (
       range?.startDate !== "Invalid date" &&
       range?.endDate !== "Invalid date"
     )
       setFiltersQuery((state: any) => ({
         ...state,
-        [startDateKeyName]: range?.startDate,
+        [startDateKeyName]: moment(new Date(range?.startDate))
+          .add(3, "hours")
+          .format("YYYY-MM-DDTHH:mm:ss.SSS"),
 
         // moment(new Date(range?.startDate))
         //   .add(3, "hours"),
-        [endDateKeyName]: range?.endDate,
+        [endDateKeyName]: moment(new Date(range?.endDate))
+          .add(3, "hours")
+          .format("YYYY-MM-DDTHH:mm:ss.SSS"),
 
         // moment(new Date(range?.endDate))
         //   .add(3, "hours"),
@@ -223,7 +226,6 @@ export default function Filters({
             Object.keys(newQuery).forEach((key) => {
               if (!newQuery[key]) delete newQuery[key];
             });
-
 
             setQuery(newQuery);
             setOpen(false);

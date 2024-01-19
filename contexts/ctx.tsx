@@ -67,6 +67,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
 
   useEffect(() => {
     setSession(data.token);
+    AsyncStorage.setItem("token", data.token);
   }, [data]);
 
   return (
@@ -84,9 +85,10 @@ export function SessionProvider(props: React.PropsWithChildren) {
         signByStorage: async () => {
           const tokenStorage = await AsyncStorage.getItem("token");
           setSession(tokenStorage || session); // Update asyncStorage state
-          if (!validateError) {
+          if (!session) {
             refetchValidate();
           }
+        
         },
         setSession,
         session,

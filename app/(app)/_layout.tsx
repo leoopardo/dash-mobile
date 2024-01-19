@@ -7,7 +7,7 @@ import {
 } from "@ui-kitten/components";
 import { LinearGradient } from "expo-linear-gradient";
 import { Redirect, Stack, router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 import { Avatar, Icon } from "react-native-elements";
 import Colors from "../../constants/Colors";
@@ -15,24 +15,20 @@ import { useSession } from "../../contexts/ctx";
 import { useFilter } from "../../contexts/filtersContext";
 import { useValidate } from "../../services/auth/useValidateToken";
 import { Icon as EvaIcon } from "react-native-eva-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AppLayout() {
-  const { session, isLoading, user, signOut, signByStorage, setSession } = useSession();
   const [menuVisible, setMenuVisible] = useState(false);
-  const { validateError } = useValidate(session || "");
   const { setOpen } = useFilter();
+  const { session, signOut, signByStorage, setSession, isLoading, user } =
+    useSession();
+  const { validateError, isValidateSuccess } = useValidate(session || "");
 
-  if (!user && session) {
-    signByStorage();
-  }
-  if (!session) {
-    return <Redirect href="/sign-in" />;
-  }
-  if (validateError) {
-    setSession(null)
-    signOut();
-    return <Redirect href="/sign-in" />;
-  }
+  const getItems = async () => {
+    return await AsyncStorage.getItem("token");
+  };
+
+ 
 
   const toggleMenu = (): void => {
     setMenuVisible(!menuVisible);
@@ -94,18 +90,39 @@ export default function AppLayout() {
           </Button>
         ),
         headerRight: () => (
-          <OverflowMenu
-            anchor={renderMenuAction}
-            visible={menuVisible}
-            onBackdropPress={toggleMenu}
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <MenuItem accessoryLeft={InfoIcon} title="Perfil" />
-            <MenuItem
-              accessoryLeft={LogoutIcon}
-              title="Sair"
-              onPressOut={() => signOut()}
-            />
-          </OverflowMenu>
+            <Button
+              appearance="ghost"
+              style={{ width: 36, height: 36 }}
+              onPress={() => setOpen(true)}
+            >
+              <EvaIcon
+                name="funnel-outline"
+                width={32}
+                height={32}
+                fill="#ffffffc5"
+              />
+            </Button>
+            <OverflowMenu
+              anchor={renderMenuAction}
+              visible={menuVisible}
+              onBackdropPress={toggleMenu}
+            >
+              <MenuItem accessoryLeft={InfoIcon} title="Perfil" />
+              <MenuItem
+                accessoryLeft={LogoutIcon}
+                title="Sair"
+                onPressOut={() => signOut()}
+              />
+            </OverflowMenu>
+          </View>
         ),
       }}
     >
